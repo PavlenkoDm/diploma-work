@@ -1,0 +1,19 @@
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+.terraformrc
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+crash.log
+hack/
+*.hcl
+backend.tf
+
+# Локальные провайдеры
+.override.tf
+
+personal*.tfvars

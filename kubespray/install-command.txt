@@ -1,0 +1,5 @@
+docker run --rm -it \
+  -v /mnt/d/NeTol/diploma-work/kubespray/inventory:/kubespray/inventory \
+  -v /mnt/d/NeTol/diploma-work/kubespray/id_ed25519:/tmp/id_ed25519_src:ro \
+  quay.io/kubespray/kubespray:v2.27.0 \
+  bash -c "mkdir -p /root/.ssh && cp /tmp/id_ed25519_src /root/.ssh/id_ed25519 && chmod 600 /root/.ssh/id_ed25519 && ansible-playbook -i inventory/diploma/hosts.yaml --private-key /root/.ssh/id_ed25519 -u ubuntu --become cluster.yml"
