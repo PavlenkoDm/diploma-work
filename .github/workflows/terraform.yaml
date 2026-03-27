@@ -26,9 +26,17 @@ jobs:
           aws_secret_access_key=${{ secrets.TF_SECRET_KEY }}
           EOF
 
+      # - name: Terraform Init
+      #   working-directory: terraform/infrastructure
+      #   run: terraform init
+
       - name: Terraform Init
         working-directory: terraform/infrastructure
-        run: terraform init
+        run: terraform init -reconfigure 2>&1
+
+      - name: Debug state
+        working-directory: terraform/infrastructure
+        run: terraform state list
 
       - name: Debug terraform init
         working-directory: terraform/infrastructure

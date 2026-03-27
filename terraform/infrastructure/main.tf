@@ -121,6 +121,3 @@ resource "yandex_compute_instance" "worker" {
     ssh-keys = "ubuntu:${var.ssh_public_key}"
   }
 }
-
-
-
