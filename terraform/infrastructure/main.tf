@@ -1,46 +1,46 @@
 # ==============================
-# VPC СЕТЬ
+# VPC network
 # ==============================
 
 resource "yandex_vpc_network" "diploma-network" {
-  name      = "diploma-network"
+  name      = var.network_name
   folder_id = var.folder_id
 }
 
 # ==============================
-# ПОДСЕТИ В РАЗНЫХ ЗОНАХ
+# SUBNETS in zones
 # ==============================
 
 resource "yandex_vpc_subnet" "subnet-a" {
   name           = "subnet-a"
-  zone           = "ru-central1-a"
+  zone           = var.zone_a
   network_id     = yandex_vpc_network.diploma-network.id
-  v4_cidr_blocks = ["10.0.1.0/24"]
+  v4_cidr_blocks = var.subnet_v4cidr_blocks.subnet_a
   folder_id      = var.folder_id
 }
 
 resource "yandex_vpc_subnet" "subnet-b" {
   name           = "subnet-b"
-  zone           = "ru-central1-b"
+  zone           = var.zone_b
   network_id     = yandex_vpc_network.diploma-network.id
-  v4_cidr_blocks = ["10.0.2.0/24"]
+  v4_cidr_blocks = var.subnet_v4cidr_blocks.subnet_b
   folder_id      = var.folder_id
 }
 
 resource "yandex_vpc_subnet" "subnet-d" {
   name           = "subnet-d"
-  zone           = "ru-central1-d"
+  zone           = var.zone_d
   network_id     = yandex_vpc_network.diploma-network.id
-  v4_cidr_blocks = ["10.0.3.0/24"]
+  v4_cidr_blocks = var.subnet_v4cidr_blocks.subnet_d
   folder_id      = var.folder_id
 }
 
 # ==============================
-# ОБРАЗ ОС
+# OS Image
 # ==============================
 
 data "yandex_compute_image" "ubuntu" {
-  family = "ubuntu-2204-lts"
+  family = var.os_image_family
 }
 
 # ==============================
@@ -48,23 +48,23 @@ data "yandex_compute_image" "ubuntu" {
 # ==============================
 
 resource "yandex_compute_instance" "master" {
-  name        = "master"
-  hostname    = "master"
-  platform_id = "standard-v3"
-  zone        = "ru-central1-a"
+  name        = var.vm_master_config.name
+  hostname    = var.vm_master_config.name
+  platform_id = var.cpu_type
+  zone        = var.zone_a
   folder_id   = var.folder_id
 
   resources {
-    cores         = 2
-    memory        = 4
-    core_fraction = 20
+    cores         = var.vm_master_config.cores
+    memory        = var.vm_master_config.memory
+    core_fraction = var.vm_master_config.core_fraction
   }
 
   boot_disk {
     initialize_params {
       image_id = data.yandex_compute_image.ubuntu.id
-      size     = 50
-      type     = "network-ssd"
+      size     = var.vm_master_config.disk_size
+      type     = var.vm_master_config.disk_type
     }
   }
 
@@ -88,23 +88,23 @@ resource "yandex_compute_instance" "master" {
 
 resource "yandex_compute_instance" "worker" {
   count       = 2
-  name        = "worker-${count.index + 1}"
-  hostname    = "worker-${count.index + 1}"
-  platform_id = "standard-v3"
-  zone        = count.index == 0 ? "ru-central1-b" : "ru-central1-d"
+  name        = "${var.vm_worker_config.name}-${count.index + 1}"
+  hostname    = "${var.vm_worker_config.name}-${count.index + 1}"
+  platform_id = var.cpu_type
+  zone        = count.index == 0 ? var.zone_b : var.zone_d
   folder_id   = var.folder_id
 
   resources {
-    cores         = 2
-    memory        = 4
-    core_fraction = 20
+    cores         = var.vm_worker_config.cores
+    memory        = var.vm_worker_config.memory
+    core_fraction = var.vm_worker_config.core_fraction
   }
 
   boot_disk {
     initialize_params {
       image_id = data.yandex_compute_image.ubuntu.id
-      size     = 50
-      type     = "network-ssd"
+      size     = var.vm_worker_config.disk_size
+      type     = var.vm_worker_config.disk_type
     }
   }
 
@@ -121,3 +121,4 @@ resource "yandex_compute_instance" "worker" {
     ssh-keys = "ubuntu:${var.ssh_public_key}"
   }
 }
+
