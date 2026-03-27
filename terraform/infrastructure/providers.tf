@@ -12,6 +12,25 @@ terraform {
       version = "~> 2.2.0"
     }
   }
+
+  backend "s3" {
+    endpoints = {
+      s3 = "https://storage.yandexcloud.net"
+    }
+
+    shared_credentials_files = ["~/.aws/credentials"]
+  
+    profile = "default"
+    region="ru-central1"
+
+    bucket = "pavlenko-nwd-20260303"
+    key    = "terraform/infrastructure/terraform.tfstate"
+
+    skip_region_validation      = true
+    skip_credentials_validation = true
+    skip_requesting_account_id  = true
+    skip_s3_checksum            = true
+  }
 }
 
 provider "yandex" {
