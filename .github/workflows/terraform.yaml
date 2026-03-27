@@ -26,26 +26,26 @@ jobs:
           aws_secret_access_key=${{ secrets.TF_SECRET_KEY }}
           EOF
 
-      # - name: Terraform Init
-      #   working-directory: terraform/infrastructure
-      #   run: terraform init
-
       - name: Terraform Init
         working-directory: terraform/infrastructure
-        run: terraform init -reconfigure 2>&1
+        run: terraform init
 
-      - name: Debug state
-        working-directory: terraform/infrastructure
-        run: terraform state list
+      # - name: Terraform Init
+      #   working-directory: terraform/infrastructure
+      #   run: terraform init -reconfigure 2>&1
 
-      - name: Debug terraform init
-        working-directory: terraform/infrastructure
-        run: |
-          echo "Home dir: $HOME"
-          echo "AWS credentials file:"
-          cat $HOME/.aws/credentials
-          echo "---"
-          terraform state list
+      # - name: Debug state
+      #   working-directory: terraform/infrastructure
+      #   run: terraform state list
+
+      # - name: Debug terraform init
+      #   working-directory: terraform/infrastructure
+      #   run: |
+      #     echo "Home dir: $HOME"
+      #     echo "AWS credentials file:"
+      #     cat $HOME/.aws/credentials
+      #     echo "---"
+      #     terraform state list
 
       - name: Terraform Plan
         working-directory: terraform/infrastructure
@@ -71,4 +71,4 @@ jobs:
           TF_VAR_S3_access_key: ${{ secrets.TF_ACCESS_KEY }}
           TF_VAR_S3_secret_key: ${{ secrets.TF_SECRET_KEY }}
           TF_VAR_service_account_id: ${{ secrets.TF_SA_ID }}
-        run: terraform apply -auto-approve
+        run: terraform apply -auto-approve # Спорный момент насчет -auto-approve

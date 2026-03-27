@@ -21,7 +21,7 @@ terraform {
     shared_credentials_files = ["~/.aws/credentials"]
   
     profile = "default"
-    region="ru-central1"
+    region = "ru-central1"
 
     bucket = "pavlenko-nwd-20260303"
     key    = "terraform/infrastructure/terraform.tfstate"
