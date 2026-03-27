@@ -22,13 +22,23 @@ variable "default_zone" {
 
 variable "bucket_name" {
   description = "Имя S3 bucket для хранения Terraform state"
-  type        = string
+  type    = string
   default = ""
 }
 
 variable "ssh_public_key" {
   description = "Публичный SSH ключ для доступа к ВМ"
-  type        = string
-  default = ""
-  sensitive   = true
+  type      = string
+  default   = ""
+  sensitive = true
+}
+
+variable "sa_name" {
+  type    = string
+  default = "terraform-sa"
+}
+
+variable "sa_role" {
+  type    = string
+  default = "editor"
 }

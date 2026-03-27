@@ -1,25 +1,25 @@
 # ==============================
-# СЕРВИСНЫЙ АККАУНТ
+# SA
 # ==============================
 
 resource "yandex_iam_service_account" "terraform-sa" {
-  name        = "terraform-sa"
+  name        = var.sa_name
   description = "Сервисный аккаунт для управления инфраструктурой через Terraform"
   folder_id   = var.folder_id
 }
 
 # ==============================
-# ПРАВА СЕРВИСНОГО АККАУНТА
+# SA permission
 # ==============================
 
 resource "yandex_resourcemanager_folder_iam_member" "terraform-sa-editor" {
   folder_id = var.folder_id
-  role      = "editor"
+  role      = var.sa_role
   member    = "serviceAccount:${yandex_iam_service_account.terraform-sa.id}"
 }
 
 # ==============================
-# СТАТИЧЕСКИЙ КЛЮЧ ДОСТУПА
+# Static acc key
 # ==============================
 
 resource "yandex_iam_service_account_static_access_key" "terraform-sa-key" {

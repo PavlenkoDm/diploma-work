@@ -30,6 +30,15 @@ jobs:
         working-directory: terraform/infrastructure
         run: terraform init
 
+      - name: Debug terraform init
+        working-directory: terraform/infrastructure
+        run: |
+          echo "Home dir: $HOME"
+          echo "AWS credentials file:"
+          cat $HOME/.aws/credentials
+          echo "---"
+          terraform state list
+
       - name: Terraform Plan
         working-directory: terraform/infrastructure
         env:
